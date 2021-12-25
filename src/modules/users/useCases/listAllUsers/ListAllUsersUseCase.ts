@@ -6,10 +6,21 @@ interface IRequest {
 }
 
 class ListAllUsersUseCase {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(private usersRepository: IUsersRepository) {
+    // Default
+  }
 
   execute({ user_id }: IRequest): User[] {
     // Complete aqui
+    const userAlreadyExists = this.usersRepository.findById(user_id);
+
+    if (!userAlreadyExists) {
+      throw new Error("User not exists!");
+    } else if (!userAlreadyExists.admin) {
+      throw new Error("User not is admin!");
+    }
+
+    return this.usersRepository.list();
   }
 }
 
